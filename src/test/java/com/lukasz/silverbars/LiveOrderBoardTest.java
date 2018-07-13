@@ -41,14 +41,14 @@ public class LiveOrderBoardTest {
     @Test
     public void should_register_multiple_unique_buy_order_and_sort_by_highest_price() {
         orderBoard.register(buyOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(303.00)));
-        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(5.5), pricePerKG(203.00)));
-        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.0), pricePerKG(1000.00)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(5.5), pricePerKG(302.00)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.0), pricePerKG(305.00)));
 
         assertThat(orderBoard.summary(), is(
                 anOrderSummaryOf(
-                        aBuyOrderSummary(new QuantityInKG(1.0), pricePerKG(1000.00)),
+                        aBuyOrderSummary(new QuantityInKG(1.0), pricePerKG(305.00)),
                         aBuyOrderSummary(new QuantityInKG(3.5), pricePerKG(303.00)),
-                        aBuyOrderSummary(new QuantityInKG(5.5), pricePerKG(203.00))
+                        aBuyOrderSummary(new QuantityInKG(5.5), pricePerKG(302.00))
                 )
         ));
     }
@@ -57,15 +57,15 @@ public class LiveOrderBoardTest {
     @Test
     public void should_register_multiple_buy_order_with_some_for_the_same_price() {
         orderBoard.register(buyOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(303.00)));
-        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(5.5), pricePerKG(203.00)));
-        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.0), pricePerKG(1000.00)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(5.5), pricePerKG(302.00)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.0), pricePerKG(305.00)));
         orderBoard.register(buyOrder(randomUser(), new QuantityInKG(6.5), pricePerKG(303.00)));
 
         assertThat(orderBoard.summary(), is(
                 anOrderSummaryOf(
-                        aBuyOrderSummary(new QuantityInKG(1.0), pricePerKG(1000.00)),
+                        aBuyOrderSummary(new QuantityInKG(1.0), pricePerKG(305.00)),
                         aBuyOrderSummary(new QuantityInKG(10.0), pricePerKG(303.00)),
-                        aBuyOrderSummary(new QuantityInKG(5.5), pricePerKG(203.00))
+                        aBuyOrderSummary(new QuantityInKG(5.5), pricePerKG(302.00))
                 )
         ));
     }
