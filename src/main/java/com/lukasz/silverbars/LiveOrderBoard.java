@@ -41,4 +41,8 @@ public class LiveOrderBoard {
     public void register(Order order) {
         orders.add(order);
     }
+
+    public boolean cancel(OrderId orderId) {
+        return orders.removeIf(it -> it.getOrderId().equals(orderId));
+    }
 }

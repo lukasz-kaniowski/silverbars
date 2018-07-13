@@ -133,6 +133,42 @@ public class LiveOrderBoardTest {
         ));
     }
 
+    @Test
+    public void should_return_false_when_canceling_non_existing_order() {
+        assertThat(orderBoard.cancel(new OrderId()), is(false));
+
+        assertThat(orderBoard.summary(), is(
+                anOrderSummaryOf()
+        ));
+    }
+
+    @Test
+    public void should_cancel_existing_order() {
+        Order order = sellOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(306));
+        orderBoard.register(order);
+
+        assertThat(orderBoard.cancel(order.getOrderId()), is(true));
+
+        assertThat(orderBoard.summary(), is(
+                anOrderSummaryOf()
+        ));
+    }
+
+    @Test
+    public void should_cancel_one_order_and_leave_other_ones() {
+        Order order = sellOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(306));
+        orderBoard.register(order);
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.2), pricePerKG(306)));
+
+        orderBoard.cancel(order.getOrderId());
+
+        assertThat(orderBoard.summary(), is(
+                anOrderSummaryOf(
+                        aBuyOrderSummary(new QuantityInKG(1.2), pricePerKG(306))
+                )
+        ));
+    }
+
 
     private PricePerKG pricePerKG(double price) {
         return new PricePerKG(new BigDecimal(price));
