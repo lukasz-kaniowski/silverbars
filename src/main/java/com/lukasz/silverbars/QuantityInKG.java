@@ -13,6 +13,11 @@ public class QuantityInKG {
         return quantity;
     }
 
+    public QuantityInKG add(QuantityInKG quantityInKG) {
+        return new QuantityInKG(quantityInKG.getQuantity() + this.getQuantity());
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

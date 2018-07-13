@@ -53,6 +53,23 @@ public class LiveOrderBoardTest {
     }
 
 
+    @Test
+    public void should_register_multiple_buy_order_with_some_for_the_same_price() {
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(303.00)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(5.5), pricePerKG(203.00)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.0), pricePerKG(1000.00)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(6.5), pricePerKG(303.00)));
+
+        assertThat(orderBoard.summary(), is(
+                anOrderSummaryOf(
+                        aBuyOrderSummary(new QuantityInKG(1.0), pricePerKG(1000.00)),
+                        aBuyOrderSummary(new QuantityInKG(10.0), pricePerKG(303.00)),
+                        aBuyOrderSummary(new QuantityInKG(5.5), pricePerKG(203.00))
+                )
+        ));
+    }
+
+
     private PricePerKG pricePerKG(double price) {
         return new PricePerKG(new BigDecimal(price));
     }
