@@ -14,8 +14,6 @@ public class OrderSummaryItem {
         this.pricePerKG = pricePerKG;
     }
 
-
-
     public OrderType getType() {
         return type;
     }

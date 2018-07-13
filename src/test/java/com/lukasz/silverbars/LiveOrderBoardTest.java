@@ -76,7 +76,59 @@ public class LiveOrderBoardTest {
 
         assertThat(orderBoard.summary(), is(
                 anOrderSummaryOf(
-                        aSellOrder(new QuantityInKG(1.0), pricePerKG(44.44))
+                        aSellOrderSummary(new QuantityInKG(1.0), pricePerKG(44.44))
+                )
+        ));
+    }
+
+    @Test
+    public void should_register_multiple_sell_orders_and_sort_by_lowest_price() {
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(306)));
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(1.2), pricePerKG(310)));
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(1.5), pricePerKG(307)));
+
+        assertThat(orderBoard.summary(), is(
+                anOrderSummaryOf(
+                        aSellOrderSummary(new QuantityInKG(3.5), pricePerKG(306)),
+                        aSellOrderSummary(new QuantityInKG(1.5), pricePerKG(307)),
+                        aSellOrderSummary(new QuantityInKG(1.2), pricePerKG(310))
+                )
+        ));
+    }
+
+    @Test
+    public void should_register_multiple_sell_orders_with_some_for_the_same_price() {
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(306)));
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(1.2), pricePerKG(310)));
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(1.5), pricePerKG(307)));
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(2.0), pricePerKG(306)));
+
+        assertThat(orderBoard.summary(), is(
+                anOrderSummaryOf(
+                        aSellOrderSummary(new QuantityInKG(5.5), pricePerKG(306)),
+                        aSellOrderSummary(new QuantityInKG(1.5), pricePerKG(307)),
+                        aSellOrderSummary(new QuantityInKG(1.2), pricePerKG(310))
+                )
+        ));
+    }
+
+    @Test
+    public void should_register_multiple_sell_and_buy_orders() {
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(306)));
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(1.2), pricePerKG(310)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.2), pricePerKG(306)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.2), pricePerKG(306)));
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(1.5), pricePerKG(307)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.2), pricePerKG(310)));
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(2.0), pricePerKG(306)));
+
+        assertThat(orderBoard.summary(), is(
+                anOrderSummaryOf(
+                        aBuyOrderSummary(new QuantityInKG(1.2), pricePerKG(310)),
+                        aBuyOrderSummary(new QuantityInKG(2.4), pricePerKG(306)),
+                        aSellOrderSummary(new QuantityInKG(5.5), pricePerKG(306)),
+                        aSellOrderSummary(new QuantityInKG(1.5), pricePerKG(307)),
+                        aSellOrderSummary(new QuantityInKG(1.2), pricePerKG(310))
                 )
         ));
     }
@@ -98,7 +150,7 @@ public class LiveOrderBoardTest {
         return new OrderSummaryItem(OrderType.BUY, quantityInKG, pricePerKG);
     }
 
-    private OrderSummaryItem aSellOrder(QuantityInKG quantityInKG, PricePerKG pricePerKG) {
+    private OrderSummaryItem aSellOrderSummary(QuantityInKG quantityInKG, PricePerKG pricePerKG) {
         return new OrderSummaryItem(OrderType.SELL, quantityInKG, pricePerKG);
     }
 }
