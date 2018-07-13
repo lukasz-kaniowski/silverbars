@@ -1,4 +1,4 @@
-package com.lukasz.silverbars;
+package com.lukasz.silverbars.model;
 
 public enum OrderType {
     BUY, SELL

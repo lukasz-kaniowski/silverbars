@@ -1,5 +1,9 @@
 package com.lukasz.silverbars;
 
+import com.lukasz.silverbars.model.Order;
+import com.lukasz.silverbars.model.OrderType;
+import com.lukasz.silverbars.model.PricePerKG;
+
 import java.util.Objects;
 
 public class OrderGrouping {

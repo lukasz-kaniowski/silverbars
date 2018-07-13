@@ -1,12 +1,13 @@
 package com.lukasz.silverbars;
 
+import com.lukasz.silverbars.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static com.lukasz.silverbars.Order.buyOrder;
-import static com.lukasz.silverbars.Order.sellOrder;
+import static com.lukasz.silverbars.model.Order.buyOrder;
+import static com.lukasz.silverbars.model.Order.sellOrder;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

@@ -1,4 +1,4 @@
-package com.lukasz.silverbars;
+package com.lukasz.silverbars.model;
 
 import java.math.BigDecimal;
 import java.util.Objects;

@@ -1,7 +1,10 @@
 package com.lukasz.silverbars;
 
+import com.lukasz.silverbars.model.*;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.*;
 
@@ -9,33 +12,17 @@ public class LiveOrderBoard {
 
     private final List<Order> orders = new ArrayList<>();
 
+    private final OrderSummaryItemFactory orderSummaryItemFactory = new OrderSummaryItemFactory();
+
 
     public OrderSummary summary() {
         return new OrderSummary(orders.stream()
                 .collect(groupingBy(OrderGrouping::byTypeAndPrice, mapping(Order::getQuantityInKG, toList())))
                 .entrySet().stream()
-                .map(it -> new OrderSummaryItem(it.getKey().getType(), totalPrice(it.getValue()), it.getKey().getPricePerKG()))
-                .sorted(this::byPriceAndType)
+                .map(this::toOrderSummaryItem)
+                .sorted(OrderSorter::byPriceAndType)
                 .collect(toList())
         );
-    }
-
-    public int byPriceAndType(OrderSummaryItem a, OrderSummaryItem b) {
-        if (a.getType() != b.getType()) {
-            return a.getType() == OrderType.SELL ? 1 : -1;
-        }
-
-        if (a.getType() == OrderType.BUY) {
-            return b.getPricePerKG().getPrice().compareTo(a.getPricePerKG().getPrice());
-        } else {
-            return a.getPricePerKG().getPrice().compareTo(b.getPricePerKG().getPrice());
-        }
-
-
-    }
-
-    private QuantityInKG totalPrice(List<QuantityInKG> quantities) {
-        return quantities.stream().reduce(new QuantityInKG(0), QuantityInKG::add);
     }
 
     public void register(Order order) {
@@ -44,5 +31,14 @@ public class LiveOrderBoard {
 
     public boolean cancel(OrderId orderId) {
         return orders.removeIf(it -> it.getOrderId().equals(orderId));
+    }
+
+    private OrderSummaryItem toOrderSummaryItem(Map.Entry<OrderGrouping, List<QuantityInKG>> it) {
+        return orderSummaryItemFactory.createWithTotalQuantity(
+                it.getKey().getType(),
+                it.getKey().getPricePerKG(),
+                it.getValue()
+        );
+
     }
 }
