@@ -179,8 +179,8 @@ public class LiveOrderBoardTest {
         return new UserId();
     }
 
-    private OrderSummary anOrderSummaryOf(OrderSummaryItem... buyOrders) {
-        return new OrderSummary(asList(buyOrders));
+    private OrderSummary anOrderSummaryOf(OrderSummaryItem... orders) {
+        return new OrderSummary(asList(orders));
     }
 
     private OrderSummaryItem aBuyOrderSummary(QuantityInKG quantityInKG, PricePerKG pricePerKG) {
