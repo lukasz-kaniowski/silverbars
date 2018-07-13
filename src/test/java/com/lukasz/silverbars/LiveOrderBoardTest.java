@@ -27,15 +27,31 @@ public class LiveOrderBoardTest {
     }
 
     @Test
-    public void should_return_single_buy_order() {
+    public void should_register_single_buy_order() {
         orderBoard.register(buyOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(303.00)));
 
         assertThat(orderBoard.summary(), is(
                 anOrderSummaryOf(
-                        aBuyOrderSummary(new QuantityInKG(3.5), pricePerKG(302.00))
+                        aBuyOrderSummary(new QuantityInKG(3.5), pricePerKG(303.00))
                 )
         ));
     }
+
+    @Test
+    public void should_register_multiple_unique_buy_order_and_sort_by_highest_price() {
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(3.5), pricePerKG(303.00)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(5.5), pricePerKG(203.00)));
+        orderBoard.register(buyOrder(randomUser(), new QuantityInKG(1.0), pricePerKG(1000.00)));
+
+        assertThat(orderBoard.summary(), is(
+                anOrderSummaryOf(
+                        aBuyOrderSummary(new QuantityInKG(1.0), pricePerKG(1000.00)),
+                        aBuyOrderSummary(new QuantityInKG(3.5), pricePerKG(303.00)),
+                        aBuyOrderSummary(new QuantityInKG(5.5), pricePerKG(203.00))
+                )
+        ));
+    }
+
 
     private PricePerKG pricePerKG(double price) {
         return new PricePerKG(new BigDecimal(price));
