@@ -2,9 +2,8 @@ package com.lukasz.silverbars;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 public class LiveOrderBoard {
 
@@ -12,12 +11,16 @@ public class LiveOrderBoard {
 
     public OrderSummary summary() {
         return new OrderSummary(orders.stream()
-                .collect(Collectors.groupingBy(Order::getPricePerKG, Collectors.mapping(Order::getQuantityInKG, toList())))
+                .collect(groupingBy(OrderGrouping::byTypeAndPrice, mapping(Order::getQuantityInKG, toList())))
                 .entrySet().stream()
-                .map(it -> new OrderSummaryItem(OrderType.BUY, it.getValue().stream().reduce(new QuantityInKG(0), QuantityInKG::add), it.getKey()))
+                .map(it -> new OrderSummaryItem(it.getKey().getType(), totalPrice(it.getValue()), it.getKey().getPricePerKG()))
                 .sorted((a, b) -> b.getPricePerKG().getPrice().compareTo(a.getPricePerKG().getPrice()))
                 .collect(toList())
         );
+    }
+
+    private QuantityInKG totalPrice(List<QuantityInKG> quantities) {
+        return quantities.stream().reduce(new QuantityInKG(0), QuantityInKG::add);
     }
 
     public void register(Order order) {

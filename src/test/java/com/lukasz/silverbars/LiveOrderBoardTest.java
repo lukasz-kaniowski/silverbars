@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.lukasz.silverbars.Order.buyOrder;
+import static com.lukasz.silverbars.Order.sellOrder;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -69,6 +70,17 @@ public class LiveOrderBoardTest {
         ));
     }
 
+    @Test
+    public void should_register_single_sell_order() {
+        orderBoard.register(sellOrder(randomUser(), new QuantityInKG(1.0), pricePerKG(44.44)));
+
+        assertThat(orderBoard.summary(), is(
+                anOrderSummaryOf(
+                        aSellOrder(new QuantityInKG(1.0), pricePerKG(44.44))
+                )
+        ));
+    }
+
 
     private PricePerKG pricePerKG(double price) {
         return new PricePerKG(new BigDecimal(price));
@@ -84,5 +96,9 @@ public class LiveOrderBoardTest {
 
     private OrderSummaryItem aBuyOrderSummary(QuantityInKG quantityInKG, PricePerKG pricePerKG) {
         return new OrderSummaryItem(OrderType.BUY, quantityInKG, pricePerKG);
+    }
+
+    private OrderSummaryItem aSellOrder(QuantityInKG quantityInKG, PricePerKG pricePerKG) {
+        return new OrderSummaryItem(OrderType.SELL, quantityInKG, pricePerKG);
     }
 }

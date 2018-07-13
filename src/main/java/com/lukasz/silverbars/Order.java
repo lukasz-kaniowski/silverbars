@@ -20,6 +20,10 @@ public class Order {
         return new Order(userId, quantityInKG, pricePerKG, OrderType.BUY);
     }
 
+    public static Order sellOrder(UserId userId, QuantityInKG quantityInKG, PricePerKG pricePerKG) {
+        return new Order(userId, quantityInKG, pricePerKG, OrderType.SELL);
+    }
+
     public UserId getUserId() {
         return userId;
     }
